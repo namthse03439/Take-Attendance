@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.sonata.takeattendanceversion10testcamerafunction.ImageCaptureActivity">
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/titleLayout"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take Attendance"
+            android:textSize="25dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:textColor="@android:color/background_dark"/>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView"
+        android:layout_below="@+id/titleLayout"
+        android:layout_above="@+id/layout_report"
+        android:layout_alignStart="@+id/layout_report" />
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/layout_report"
+        android:layout_margin="7dp">
+
+        <Button
+            android:id="@+id/btn_takeAttendance"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CAPTURE IMAGE">
+        </Button>
+    </RelativeLayout>
+
+</RelativeLayout>

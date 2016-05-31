@@ -17,7 +17,7 @@ import butterknife.InjectView;
 public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
 
-    @InjectView(R.id.input_name) EditText _nameText;
+    @InjectView(R.id.input_username) EditText _usernameText;
     @InjectView(R.id.input_email) EditText _emailText;
     @InjectView(R.id.input_password) EditText _passwordText;
     @InjectView(R.id.btn_signup) Button _signupButton;
@@ -61,7 +61,7 @@ public class SignUpActivity extends AppCompatActivity {
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
-        String name = _nameText.getText().toString();
+        String username = _usernameText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
@@ -95,15 +95,15 @@ public class SignUpActivity extends AppCompatActivity {
     public boolean validate() {
         boolean valid = true;
 
-        String name = _nameText.getText().toString();
+        String username = _usernameText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        if (name.isEmpty() || name.length() < 3) {
-            _nameText.setError("at least 3 characters");
+        if (username.isEmpty() || username.length() < 4 || username.length() > 255) {
+            _usernameText.setError("enter a valid username");
             valid = false;
         } else {
-            _nameText.setError(null);
+            _usernameText.setError(null);
         }
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {

@@ -1,6 +1,7 @@
 package com.example.sonata.takeattendanceversion10testcamerafunction;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,8 +14,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("ATK_pref", 0);
+        String auCode = pref.getString("authorizationCode", null);
+        if(auCode != null && auCode != "{\"password\":[\"Incorrect username or password.\"]}"){
+            Intent intent = new Intent(this, TakeAttendanceActivity.class);
+            startActivity(intent);
+        }
+        else {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

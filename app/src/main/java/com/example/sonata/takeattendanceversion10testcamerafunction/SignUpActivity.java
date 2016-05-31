@@ -1,5 +1,6 @@
 package com.example.sonata.takeattendanceversion10testcamerafunction;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -11,8 +12,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
@@ -67,7 +74,13 @@ public class SignUpActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own signup logic here.
+        // Interact with local server
+        //==========================
+
+        SignupClass user = new SignupClass(username, password, email, studentId);
+        signupAction(user);
+
+        //--------------------------
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
@@ -132,4 +145,46 @@ public class SignUpActivity extends AppCompatActivity {
 
         return valid;
     }
+
+    public void signupAction(SignupClass user){
+
+        String returnMessage = "";
+
+        StringClient client = ServiceGenerator.createService(StringClient.class);
+
+        Call<ResponseBody> call = client.signup(user);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    JSONObject data = new JSONObject(response.body().string());
+                    String authorizationCode = data.getString("data");
+
+                    SharedPreferences pref = getApplicationContext().getSharedPreferences("ATK_pref", 0);
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("authorizationCode", "Bearer " + authorizationCode);
+                    editor.apply();
+
+                    int messageCode = response.code();
+                    String messageText = response.message();
+
+                    //TODO: handle when getting response
+
+
+                }
+                catch(Exception e){
+                    System.out.print("Not ok");
+                    //TODO: handle when not getting response
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                System.out.print("ERROR Signup");
+            }
+        });
+
+    }
+
 }

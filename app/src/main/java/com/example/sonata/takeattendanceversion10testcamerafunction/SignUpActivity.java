@@ -18,6 +18,7 @@ public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
 
     @InjectView(R.id.input_username) EditText _usernameText;
+    @InjectView(R.id.input_studentId) EditText _studentIdText;
     @InjectView(R.id.input_email) EditText _emailText;
     @InjectView(R.id.input_password) EditText _passwordText;
     @InjectView(R.id.btn_signup) Button _signupButton;
@@ -62,6 +63,7 @@ public class SignUpActivity extends AppCompatActivity {
         progressDialog.show();
 
         String username = _usernameText.getText().toString();
+        String studentId = _studentIdText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
@@ -96,6 +98,7 @@ public class SignUpActivity extends AppCompatActivity {
         boolean valid = true;
 
         String username = _usernameText.getText().toString();
+        String studentId = _studentIdText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
@@ -104,6 +107,13 @@ public class SignUpActivity extends AppCompatActivity {
             valid = false;
         } else {
             _usernameText.setError(null);
+        }
+
+        if (studentId.isEmpty()) {
+            _studentIdText.setError("enter a valid studentId");
+            valid = false;
+        } else {
+            _studentIdText.setError(null);
         }
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {

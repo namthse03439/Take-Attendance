@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TakeAttendanceVersion1.0(TestCameraFunction).iml" filepath="$PROJECT_DIR$/TakeAttendanceVersion1.0(TestCameraFunction).iml" />
+      <module fileurl="file://$PROJECT_DIR$/Take-Attendance.iml" filepath="$PROJECT_DIR$/Take-Attendance.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

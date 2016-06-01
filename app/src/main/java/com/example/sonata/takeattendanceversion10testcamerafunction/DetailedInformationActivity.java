@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -28,6 +29,10 @@ import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
 import com.estimote.sdk.SystemRequirementsChecker;
+import com.facepp.http.HttpRequests;
+import com.facepp.http.PostParameters;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,6 +42,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DetailedInformationActivity extends AppCompatActivity {
 
@@ -244,10 +257,63 @@ public class DetailedInformationActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            // send image to server - Tung's part
+            //=========================
+
+        //TODO: send image to face++ for verifying
+
+            //TODO: send request to local server to get personID
+                //TODO: if not existed yet, create a person and get personID, send to local server
+
+            // verify if this image (face) belongs to that personID
+            HttpRequests httpRequests = FaceppService.httpRequests;
+            String personID = "NULL"; //
+            String faceID = get1FaceID(httpRequests, mCurrentPhotoPath);
+            VerdictResult verdictResult = getVerification(httpRequests, personID, faceID);
+
+            if(verdictResult.getVerdict() == true && verdictResult.getConfidence() >= FaceppService.verificationThreshold){
+                //TODO: OK, attendance checked
+            }
+            else{
+                //TODO: Notify failure, recheck attendance
+            }
+
+            //-------------------------
         }
     }
 
+    //=============================
 
+    private String get1FaceID(HttpRequests httpRequests, String imgURL){
+        String faceID = null;
+        try {
+
+            File imgFile = new File(imgURL);
+            PostParameters postParameters = new PostParameters().setImg(imgFile).setMode("oneface");
+            JSONObject faceResult = httpRequests.detectionDetect(postParameters);
+            faceID = faceResult.getJSONArray("face").getJSONObject(0).getString("face_id");
+
+        }
+        catch(Exception e){
+            System.out.print("Exception: cannot get faceID from image!");
+        }
+        return faceID;
+    }
+
+    private VerdictResult getVerification(HttpRequests httpRequests, String personID, String faceID) {
+        VerdictResult verdictResult = new VerdictResult(false);
+
+        PostParameters postParameters = new PostParameters().setPersonId(personID).setFaceId(faceID);
+        try{
+            JSONObject result = httpRequests.recognitionVerify(postParameters);
+            verdictResult = new VerdictResult(result);
+        }
+        catch(Exception e){
+            System.out.print("Process interrupted!");
+        }
+
+        return(verdictResult);
+    }
+
+    //-----------------------------
 
 }

@@ -1,8 +1,14 @@
 package com.example.sonata.takeattendanceversion10testcamerafunction;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -54,6 +60,31 @@ public class LoginActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_SIGNUP);
             }
         });
+
+        if (!isNetworkAvailable())
+        {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Take Attendance");
+            builder.setMessage("This application requests Internet connection. Do you want to turn it on?");
+            builder.setNegativeButton("Disable", null);
+            builder.setPositiveButton("Enable",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick( final DialogInterface dialogInterface, final int i) {
+                            WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+                            wifiManager.setWifiEnabled(true);
+                        }
+                    });
+
+            builder.create().show();
+        }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public void login() {

@@ -28,6 +28,7 @@ public class SignUpActivity extends AppCompatActivity {
     @InjectView(R.id.input_studentId) EditText _studentIdText;
     @InjectView(R.id.input_email) EditText _emailText;
     @InjectView(R.id.input_password) EditText _passwordText;
+    @InjectView(R.id.input_confirmpass) EditText _confirmedPasswordText;
     @InjectView(R.id.btn_signup) Button _signupButton;
     @InjectView(R.id.link_login) TextView _loginLink;
 
@@ -73,6 +74,7 @@ public class SignUpActivity extends AppCompatActivity {
         String studentId = _studentIdText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
+        String confirmedPassword = _confirmedPasswordText.getText().toString();
 
         // Interact with local server
         //==========================
@@ -114,6 +116,7 @@ public class SignUpActivity extends AppCompatActivity {
         String studentId = _studentIdText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
+        String confirmedPassword = _confirmedPasswordText.getText().toString();
 
         if (username.isEmpty() || username.length() < 4 || username.length() > 255) {
             _usernameText.setError("enter a valid username");
@@ -138,6 +141,13 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
             _passwordText.setError("between 4 and 10 alphanumeric characters");
+            valid = false;
+        } else {
+            _passwordText.setError(null);
+        }
+
+        if (confirmedPassword.compareTo(password) != 0) {
+            _confirmedPasswordText.setError("These passwords don't match. Try again?");
             valid = false;
         } else {
             _passwordText.setError(null);

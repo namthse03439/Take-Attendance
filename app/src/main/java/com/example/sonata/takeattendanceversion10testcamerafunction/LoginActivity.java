@@ -1,6 +1,7 @@
 package com.example.sonata.takeattendanceversion10testcamerafunction;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,8 +13,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -68,7 +75,11 @@ public class LoginActivity extends AppCompatActivity {
         String username = _usernameText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own authentication logic here.
+        //=======================================
+
+        loginAction(username, password);
+
+        //---------------------------------------
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
@@ -133,4 +144,53 @@ public class LoginActivity extends AppCompatActivity {
 
         return valid;
     }
+
+    public void loginAction(String username, String password){
+        StringClient client = ServiceGenerator.createService(StringClient.class);
+
+        LoginClass up = new LoginClass(username, password);
+
+        Call<ResponseBody> call = client.login(up);
+
+//        Response<ResponseBody> response = call.execute();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    JSONObject data = new JSONObject(response.body().string());
+                    String authorizationCode = data.getString("data");
+
+                    int messageCode = response.code();
+
+                    if(messageCode == 200){
+
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("ATK_pref", 0);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("authorizationCode", "Bearer " + authorizationCode);
+                        editor.apply();
+
+                        Intent intend = new Intent(LoginActivity.this, TakeAttendanceActivity.class);
+                        startActivity(intend);
+                    }
+                    else{
+                        //TODO if messageCode != 200, show some dialog...
+                    }
+
+
+                }
+                catch(Exception e){
+                    System.out.print("Exception caught Login");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                //TODO handle when fail
+                System.out.print("Error Login");
+            }
+        });
+
+
+    }
+
 }

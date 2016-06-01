@@ -1,5 +1,7 @@
 package com.example.sonata.takeattendanceversion10testcamerafunction;
 
+import org.json.JSONObject;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -21,6 +23,12 @@ public interface StringClient {
     @GET("api/check-student")
     Call<ResponseBody> checkStudent();
 
+    @GET("user/person-id")
+    Call<ResponseBody> getPersonID();
+
+    @GET("user/face-id")
+    Call<ResponseBody> getFaceID();
+
     @POST("api/post")
     Call<String> postString(@Body String MothaibaBook);
 
@@ -29,6 +37,13 @@ public interface StringClient {
 
     @POST("user/signup")
     Call<ResponseBody> signup(@Body SignupClass user);
+
+    @POST("user/set-person-id")
+    Call<ResponseBody> setPersonID(@Body JSONObject JSONPersonID);
+
+    @POST("user/set-face-id")
+    Call<ResponseBody> setFaceID(@Body JSONObject JSONFaceID);
+
 
 
 //    @POST("/attendance-system/api/web/index.php/v1/api/post")

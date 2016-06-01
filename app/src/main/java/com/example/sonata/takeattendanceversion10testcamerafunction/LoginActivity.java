@@ -75,7 +75,6 @@ public class LoginActivity extends AppCompatActivity {
         String username = _usernameText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own authentication logic here.
         //=======================================
 
         loginAction(username, password);
@@ -163,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     int messageCode = response.code();
 
-                    if( ! authorizationCode.equalsIgnoreCase("{\"password\":[\"Incorrect username or password.\"]}")){
+                    if(messageCode == 200){
 
                         SharedPreferences pref = getApplicationContext().getSharedPreferences("ATK_pref", 0);
                         SharedPreferences.Editor editor = pref.edit();

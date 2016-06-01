@@ -158,19 +158,22 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    JSONObject data = new JSONObject(response.body().string());
-                    String authorizationCode = data.getString("data");
-
-                    SharedPreferences pref = getApplicationContext().getSharedPreferences("ATK_pref", 0);
-                    SharedPreferences.Editor editor = pref.edit();
-                    editor.putString("authorizationCode", "Bearer " + authorizationCode);
-                    editor.apply();
 
                     int messageCode = response.code();
-                    String messageText = response.message();
+                    if(messageCode == 200){
+                        JSONObject data = new JSONObject(response.body().string());
+                        String authorizationCode = data.getString("data");
+
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("ATK_pref", 0);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("authorizationCode", "Bearer " + authorizationCode);
+                        editor.apply();
+                    }
+                    else{
+                        //TODO: handle when cannot signup
+                    }
 
                     //TODO: handle when getting response
-
 
                 }
                 catch(Exception e){
